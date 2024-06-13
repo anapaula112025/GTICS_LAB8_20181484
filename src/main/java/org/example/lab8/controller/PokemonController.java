@@ -26,7 +26,7 @@ public class PokemonController {
 
         try {
             int id = Integer.parseInt(idStr);
-            String lugar = pokemonDao.buscarLugarEncuentroPorId(id);
+            String lugar = pokemonDao.buscarLugarPorId(id);
 
             if (lugar != null) {
                 respuesta.put("result", "ok");
@@ -42,6 +42,37 @@ public class PokemonController {
         respuesta.put("result", "failure");
         return ResponseEntity.badRequest().body(respuesta);
     }
+
+    //Obtener el método de encuentro o “encounter_method” que tenga la posibilidad más alta de captura
+    @GetMapping("/metodoEncuentro/{id}")
+    public ResponseEntity<HashMap<String, Object>> mostrarMetodoEncuentro(@PathVariable("id") String idStr) {
+
+        HashMap<String, Object> respuesta1 = new HashMap<>();
+
+        try {
+            int id = Integer.parseInt(idStr);
+            String lugar = pokemonDao.buscarLugarPorId(id);
+            String metodo = pokemonDao.buscarMetodoPorNombre(lugar);
+
+            if (lugar != null) {
+                respuesta1.put("result", "ok");
+                respuesta1.put("metodo", metodo);
+                return ResponseEntity.ok(respuesta1);
+            } else {
+                respuesta1.put("msg", "Pokemon no encontrado");
+            }
+
+        } catch (NumberFormatException e) {
+            respuesta1.put("msg", "el ID debe ser un número entero positivo");
+        }
+        respuesta1.put("result", "failure");
+        return ResponseEntity.badRequest().body(respuesta1);
+    }
+
+
+
+
+
 
 
 }
